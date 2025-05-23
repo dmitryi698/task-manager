@@ -1,0 +1,24 @@
+{
+  "name": "task-manager",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/svelte": "^7.1.0",
+    "@prisma/client": "^6.8.2",
+    "astro": "^5.8.0",
+    "svelte": "^5.33.1",
+    "typescript": "^5.8.3",
+    "zod": "^3.25.23"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.21",
+    "prisma": "^6.8.2",
+    "tailwindcss": "^4.1.7"
+  }
+}
