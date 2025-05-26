@@ -1,4 +1,6 @@
-export const submitHandler = async (
+import type { Task } from "../schema";
+
+const submitHandler = async (
   formData: FormData,
   url: string,
   method: string
@@ -22,3 +24,31 @@ export const submitHandler = async (
     throw new Error(result.error || "Failed to save task");
   }
 };
+
+const compleatHandler = async (task: Task) => {
+  const response = await fetch(`/api/tasks/${task.id}.json`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      completed: !task.completed,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to update task");
+  }
+};
+
+const deleteHandler = async (task: Task) => {
+  const response = await fetch(`/api/tasks/${task.id}.json`, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to delete task");
+  }
+};
+
+export { submitHandler, compleatHandler, deleteHandler };

@@ -1,6 +1,9 @@
 <script lang="ts">
-  import { submitHandler } from "../handlers";
   import FormField from "../../ui/FormField.svelte";
+  import Button from "../../ui/Button.svelte";
+
+  import { options } from "../data/constants";
+  import { submitHandler } from "../handlers";
 
   export let task = {
     id: "",
@@ -26,10 +29,12 @@
     const formData = new FormData(form);
 
     try {
-      const url = task.id ? `/api/tasks/${task.id}.json` : "/api/tasks/index.json";
+      const url = task.id
+        ? `/api/tasks/${task.id}.json`
+        : "/api/tasks/index.json";
       const method = task.id ? "PUT" : "POST";
 
-    await submitHandler(formData, url, method);
+      await submitHandler(formData, url, method);
 
       onClose();
       onTaskCreated();
@@ -42,93 +47,75 @@
 </script>
 
 <div class="border rounded p-4 bg-white mb-4">
-  <h3 class="font-bold text-lg mb-4">{task.id ? "Edit Task" : "Add New Task"}</h3>
+  <h3 class="font-bold text-lg mb-4">
+    {task.id ? "Edit Task" : "Add New Task"}
+  </h3>
 
   {#if error}
-    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+    <div
+      class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"
+    >
       {error}
     </div>
   {/if}
 
   <form on:submit={handleSubmit}>
     <FormField
-        id="title"
-        name="title"
-        type="text"
-        label="Title"
-        value={task.title}
-        required
-        />
-    <div class="mb-4">
-      <label class="block text-gray-700 mb-2" for="description">
-        Description
-      </label>
-      <textarea
-        id="description"
-        name="description"
-        class="w-full px-3 py-2 border rounded"
-        required
-      >{task.description}</textarea>
-    </div>
-
-    <div class="mb-4">
-      <label class="block text-gray-700 mb-2" for="priority">
-        Priority
-      </label>
-      <select
-        id="priority"
-        name="priority"
-        class="w-full px-3 py-2 border rounded"
-      >
-        <option value="low" selected={task.priority === "low"}>Low</option>
-        <option value="medium" selected={task.priority === "medium"}>Medium</option>
-        <option value="high" selected={task.priority === "high"}>High</option>
-      </select>
-    </div>
-
-    <div class="mb-4">
-      <label class="block text-gray-700 mb-2" for="dueDate">
-        Due Date
-      </label>
-      <input
-        id="dueDate"
-        name="dueDate"
-        type="date"
-        value={task.dueDate}
-        class="w-full px-3 py-2 border rounded"
+      id="title"
+      name="title"
+      type="text"
+      label="Title"
+      value={task.title}
+      required
+    />
+    <FormField
+      id="description"
+      name="description"
+      type="textarea"
+      label="Description"
+      value={task.description}
+      required
+    />
+    <FormField
+      id="priority"
+      name="priority"
+      type="select"
+      label="Priority"
+      value={task.priority}
+      {options}
+      required
+    />
+    <FormField
+      id="dueDate"
+      name="dueDate"
+      type="date"
+      label="Due Date"
+      value={task.dueDate}
+      required
+    />
+    {#if task.id}
+      <FormField
+        name="completed"
+        type="checkbox"
+        label="Completed"
+        value={task.completed}
         required
       />
-    </div>
-    {#if task.id}
-      <div class="mb-4">
-        <label class="inline-flex items-center">
-          <input
-            type="checkbox"
-            name="completed"
-            checked={task.completed}
-            class="rounded text-blue-500"
-          />
-          <span class="ml-2">Completed</span>
-        </label>
-      </div>
     {/if}
-
     <div class="flex justify-end space-x-2">
-      <button
+      <Button
         type="button"
-        on:click={onClose}
+        onclick={onClose}
         class="px-4 py-2 bg-gray-200 rounded"
         disabled={isLoading}
-      >
-        Cancel
-      </button>
-      <button
+        text="Cancel"
+      />
+      <Button
         type="submit"
         class="px-4 py-2 bg-blue-500 text-white rounded"
         disabled={isLoading}
-      >
-        {isLoading ? 'Saving...' : (task.id ? 'Update' : 'Create')}
-      </button>
+        text={isLoading ? "Saving..." : task.id ? "Update" : "Create"}
+      />
     </div>
   </form>
 </div>

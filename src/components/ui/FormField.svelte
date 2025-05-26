@@ -1,13 +1,14 @@
 <script lang="ts">
   interface FormFieldProps {
     label: string;
-    id?: string; // id может быть необязательным
+    id?: string;
     name: string;
     type: "text" | "textarea" | "date" | "select" | "checkbox";
-    value: any; // Тип значения может быть уточнен в зависимости от использования
-    error?: string; // error может быть необязательным
-    required?: boolean; // required может быть необязательным
-    options?: { value: string; label: string }[]; // options необязательны для всех типов
+    value: any;
+    error?: string;
+    required?: boolean;
+    options?: { value: string; label: string }[];
+    onChange?: (event: Event) => void;
   }
 
   let {
@@ -19,70 +20,75 @@
     error,
     required = false,
     options = [], // Убедимся, что это всегда массив по умолчанию
+    onChange,
     ...props
   }: FormFieldProps = $props();
-
 </script>
 
 <div class="mb-4">
-  {#if type !== 'checkbox'}
+  {#if type !== "checkbox"}
     <label class="block text-gray-700 mb-2" for={id || name}>
       {label}
       {#if required}<span class="text-red-500">*</span>{/if}
     </label>
   {/if}
-  {#if type === 'text'}
-       <input
-        id={name}
-        name={name}
-        type={type}
-        value={value}
-        class="w-full px-3 py-2 border rounded {error ? 'border-red-500' : ''}"
-        required={required}
-        {...props}
-      />
-  {:else if type === 'textarea'}
-    <textarea
-      id={name}
-      name={name}
-      value={value}
-      class="w-full px-3 py-2 border rounded {error ? 'border-red-500' : ''}"
-      required={required}
-      {...props}
-    ></textarea>
-  {:else if type === 'date'}
+  {#if type === "text"}
     <input
       id={name}
-      name={name}
-      type="date"
-      value={value}
+      {name}
+      {type}
+      {value}
       class="w-full px-3 py-2 border rounded {error ? 'border-red-500' : ''}"
-      required={required}
+      onchange={onChange}
+      {required}
       {...props}
     />
-  {:else if type === 'select'}
+  {:else if type === "textarea"}
+    <textarea
+      id={name}
+      {name}
+      {value}
+      onchange={onChange}
+      class="w-full px-3 py-2 border rounded {error ? 'border-red-500' : ''}"
+      {required}
+      {...props}
+    ></textarea>
+  {:else if type === "date"}
+    <input
+      id={name}
+      {name}
+      type="date"
+      onchange={onChange}
+      {value}
+      class="w-full px-3 py-2 border rounded {error ? 'border-red-500' : ''}"
+      {required}
+      {...props}
+    />
+  {:else if type === "select"}
     <select
       id={name}
-      name={name}
-      value={value}
+      {name}
+      {value}
+      onchange={onChange}
       class="w-full px-3 py-2 border rounded {error ? 'border-red-500' : ''}"
-      required={required}
+      {required}
       {...props}
     >
       {#each options as option}
         <option value={option.value}>{option.label}</option>
       {/each}
     </select>
-  {:else if type === 'checkbox'}
+  {:else if type === "checkbox"}
     <label class="inline-flex items-center">
       <input
-       id={name}
-      name={name}
-      type="checkbox"
-      value={value}
-      class="w-full px-3 py-2 border rounded {error ? 'border-red-500' : ''}"
-      required={required}
-      {...props}
+        id={name}
+        {name}
+        type="checkbox"
+        onchange={onChange}
+        {value}
+        class="rounded text-blue-500"
+        {required}
+        {...props}
       />
       <span class="ml-2">{label}</span>
     </label>

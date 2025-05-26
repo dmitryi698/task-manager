@@ -1,12 +1,33 @@
-<script>
-let {type, text, ...props} = $props();
+<script lang="ts">
+  import type { HTMLButtonAttributes } from "svelte/elements";
+
+  interface ButtonProps extends HTMLButtonAttributes {
+    type?: "button" | "submit" | "reset";
+    text: string;
+    onClick?: (event: MouseEvent) => void;
+    class?: string;
+  }
+
+  let {
+    type = "button",
+    text,
+    onClick,
+    class: className,
+    ...props
+  }: ButtonProps = $props();
 </script>
 
 <button
-  class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-  type={type}
-  aria-label="Button"
+  {type}
+  class={"button-default " + className}
+  onclick={onClick}
   {...props}
 >
   {text}
 </button>
+
+<style>
+  .button-default {
+    cursor: pointer;
+  }
+</style>

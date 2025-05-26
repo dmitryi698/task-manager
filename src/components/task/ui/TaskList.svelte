@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Button from "../../ui/Button.svelte";
   import TaskItem from "./TaskItem.svelte";
   import TaskForm from "./TaskForm.svelte";
 
@@ -20,32 +21,33 @@
 
   <div class="flex justify-between mb-4">
     <div class="flex space-x-2">
-      <button
-        class="px-3 py-1 rounded {filter === 'all' ? 'bg-blue-500 text-white' : 'bg-gray-200'}"
-        on:click={() => (filter = 'all')}
-      >
-        All
-      </button>
-      <button
-        class="px-3 py-1 rounded {filter === 'active' ? 'bg-blue-500 text-white' : 'bg-gray-200'}"
-        on:click={() => (filter = 'active')}
-      >
-        Active
-      </button>
-      <button
-        class="px-3 py-1 rounded {filter === 'completed' ? 'bg-blue-500 text-white' : 'bg-gray-200'}"
-        on:click={() => (filter = 'completed')}
-      >
-        Completed
-      </button>
+      <Button
+        class="px-3 py-1 rounded {filter === 'all'
+          ? 'bg-blue-500 text-white'
+          : 'bg-gray-200'}"
+        onClick={() => (filter = "all")}
+        text="All"
+      />
+      <Button
+        class="px-3 py-1 rounded {filter === 'active'
+          ? 'bg-blue-500 text-white'
+          : 'bg-gray-200'}"
+        onClick={() => (filter = "active")}
+        text="Active"
+      />
+      <Button
+        class="px-3 py-1 rounded {filter === 'completed'
+          ? 'bg-blue-500 text-white'
+          : 'bg-gray-200'}"
+        onClick={() => (filter = "completed")}
+        text="Completed"
+      />
     </div>
-
-    <button
+    <Button
       class="px-3 py-1 bg-green-500 text-white rounded"
-      on:click={() => (showForm = true)}
-    >
-      Add Task
-    </button>
+      onClick={() => (showForm = true)}
+      text="Add Task"
+    />
   </div>
 
   {#if showForm}
@@ -57,9 +59,9 @@
 
   <div class="space-y-4">
     {#each tasks.filter((task) => {
-      if (filter === 'all') return true;
-      if (filter === 'active') return !task.completed;
-      if (filter === 'completed') return task.completed;
+      if (filter === "all") return true;
+      if (filter === "active") return !task.completed;
+      if (filter === "completed") return task.completed;
       return true;
     }) as task (task.id)}
       <TaskItem
