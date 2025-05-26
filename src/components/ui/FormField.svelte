@@ -22,12 +22,6 @@
     ...props
   }: FormFieldProps = $props();
 
-  let isFocused = false;
-
-  const handleInput = (e: Event) => value = e.target.value;
-
-  const handleBlur =()=>isFocused=false;
-
 </script>
 
 <div class="mb-4">
@@ -37,52 +31,43 @@
       {#if required}<span class="text-red-500">*</span>{/if}
     </label>
   {/if}
-
   {#if type === 'text'}
-    <input
-      {id}
-      {name}
-      type="text"
-      bind:value
-      class="w-full px-3 py-2 border rounded {error ? 'border-red-500' : ''}"
-      {required}
-      oninput={handleInput}
-      onblur={handleBlur}
-      {...props}
-    />
+       <input
+        id={name}
+        name={name}
+        type={type}
+        value={value}
+        class="w-full px-3 py-2 border rounded {error ? 'border-red-500' : ''}"
+        required={required}
+        {...props}
+      />
   {:else if type === 'textarea'}
     <textarea
-      {id}
-      {name}
-      bind:value
+      id={name}
+      name={name}
+      value={value}
       class="w-full px-3 py-2 border rounded {error ? 'border-red-500' : ''}"
-      {required}
-      oninput={handleInput}
-      onblur={handleBlur}
+      required={required}
       {...props}
     ></textarea>
   {:else if type === 'date'}
     <input
-      {id}
-      {name}
+      id={name}
+      name={name}
       type="date"
-      bind:value
+      value={value}
       class="w-full px-3 py-2 border rounded {error ? 'border-red-500' : ''}"
-      {required}
-      oninput={handleInput}
-      onblur={handleBlur}
-            {...props}
+      required={required}
+      {...props}
     />
   {:else if type === 'select'}
     <select
-      {id}
-      {name}
-      bind:value
+      id={name}
+      name={name}
+      value={value}
       class="w-full px-3 py-2 border rounded {error ? 'border-red-500' : ''}"
-      {required}
-      oninput={handleInput}
-      onblur={handleBlur}
-            {...props}
+      required={required}
+      {...props}
     >
       {#each options as option}
         <option value={option.value}>{option.label}</option>
@@ -91,14 +76,13 @@
   {:else if type === 'checkbox'}
     <label class="inline-flex items-center">
       <input
-        {id}
-        {name}
-        type="checkbox"
-        bind:checked={value}
-        class="rounded text-blue-500"
-        oninput={handleInput}
-        onblur={handleBlur}
-              {...props}
+       id={name}
+      name={name}
+      type="checkbox"
+      value={value}
+      class="w-full px-3 py-2 border rounded {error ? 'border-red-500' : ''}"
+      required={required}
+      {...props}
       />
       <span class="ml-2">{label}</span>
     </label>

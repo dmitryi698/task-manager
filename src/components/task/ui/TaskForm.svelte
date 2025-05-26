@@ -1,4 +1,7 @@
 <script lang="ts">
+  import { submitHandler } from "../handlers";
+  import FormField from "../../ui/FormField.svelte";
+
   export let task = {
     id: "",
     title: "",
@@ -26,24 +29,7 @@
       const url = task.id ? `/api/tasks/${task.id}.json` : "/api/tasks/index.json";
       const method = task.id ? "PUT" : "POST";
 
-      const response = await fetch(url, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title: formData.get("title"),
-          description: formData.get("description"),
-          priority: formData.get("priority"),
-          dueDate: formData.get("dueDate"),
-          completed: formData.get("completed") === "on",
-        }),
-      });
-
-      if (!response.ok) {
-        const result = await response.json();
-        throw new Error(result.error || "Failed to save task");
-      }
+    await submitHandler(formData, url, method);
 
       onClose();
       onTaskCreated();
@@ -65,20 +51,14 @@
   {/if}
 
   <form on:submit={handleSubmit}>
-    <div class="mb-4">
-      <label class="block text-gray-700 mb-2" for="title">
-        Title
-      </label>
-      <input
+    <FormField
         id="title"
         name="title"
         type="text"
+        label="Title"
         value={task.title}
-        class="w-full px-3 py-2 border rounded"
         required
-      />
-    </div>
-
+        />
     <div class="mb-4">
       <label class="block text-gray-700 mb-2" for="description">
         Description
