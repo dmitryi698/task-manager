@@ -23,8 +23,8 @@
     const formData = new FormData(form);
 
     try {
-      const url = task.id ? `/api/tasks/${task.id}` : "/api/tasks";
-      const method = task.id ? "PATCH" : "POST";
+      const url = task.id ? `/api/tasks/${task.id}.json` : "/api/tasks/index.json";
+      const method = task.id ? "PUT" : "POST";
 
       const response = await fetch(url, {
         method,

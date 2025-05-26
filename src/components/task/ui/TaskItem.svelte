@@ -11,8 +11,8 @@
   async function toggleComplete() {
     isLoading = true;
     try {
-      const response = await fetch(`/api/tasks/${task.id}`, {
-        method: "PATCH",
+      const response = await fetch(`/api/tasks/${task.id}.json`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
@@ -34,9 +34,11 @@
   }
 
   async function handleDelete() {
+    console.log({task});
+
     if (confirm("Are you sure you want to delete this task?")) {
       try {
-        const response = await fetch(`/api/tasks/${task.id}`, {
+        const response = await fetch(`/api/tasks/${task.id}.json`, {
           method: "DELETE",
         });
 
