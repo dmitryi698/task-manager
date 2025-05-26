@@ -1,85 +1,37 @@
-import { prisma } from "../../../lib/prisma";
-import type { APIRoute } from "astro";
-import { taskSchema } from "../../../components/task/schema";
+import { prisma } from "../../../server/lib/prisma";
+import { apiHandler } from "../../../server/utils";
+import ErrorResponse from "../../../server/utils/response/ErrorResponse";
+import SuccessResponse from "../../../server/utils/response/SuccessResponse";
+import TaskUsecase from "../../../components/task/usecases/TaskUsecase";
+import type { APIContext } from "astro";
+const usecase = new TaskUsecase(prisma);
 
-export const GET: APIRoute = async ({ params }) => {
-  try {
-    const task = await prisma.task.findUnique({
-      where: { id: params.id },
-    });
-
-    if (!task) {
-      return new Response(JSON.stringify({ error: "Task not found" }), {
-        status: 404,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-    }
-
-    return new Response(JSON.stringify(task), {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-  } catch (error) {
-    return new Response(JSON.stringify({ error: "Failed to fetch task" }), {
-      status: 500,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+export const GET = apiHandler(async ({ params }: APIContext) => {
+  if (!params.id) {
+    return ErrorResponse.create("Task id is required", 400);
   }
-};
+  const task = await usecase.getById(params.id);
 
-export const PUT: APIRoute = async ({ params, request }) => {
-  try {
-    const data = await request.json();
-    const validatedData = taskSchema.partial().parse(data);
-
-    const task = await prisma.task.update({
-      where: { id: params.id },
-      data: validatedData,
-    });
-
-    return new Response(JSON.stringify(task), {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-  } catch (error) {
-    return new Response(
-      JSON.stringify({ error: error.message || "Invalid data" }),
-      {
-        status: 400,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+  if (!task) {
+    return ErrorResponse.create("Task not found", 404);
   }
-};
 
-export const DELETE: APIRoute = async ({ params }) => {
-  try {
-    await prisma.task.delete({
-      where: { id: params.id },
-    });
+  return SuccessResponse.create(task);
+});
 
-    return new Response(JSON.stringify({ success: true }), {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-  } catch (error) {
-    return new Response(JSON.stringify({ error: "Failed to delete task" }), {
-      status: 500,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+export const PUT = apiHandler(async ({ params, request }: APIContext) => {
+  if (!params.id) {
+    return ErrorResponse.create("Task id is required", 400);
   }
-};
+  const data = await request.json();
+  const task = await usecase.update(params.id, data);
+  return SuccessResponse.create(task);
+});
+
+export const DELETE = apiHandler(async ({ params }: APIContext) => {
+  if (!params.id) {
+    return ErrorResponse.create("Task id is required", 400);
+  }
+  const task = await usecase.delete(params.id);
+  return SuccessResponse.create(task);
+});

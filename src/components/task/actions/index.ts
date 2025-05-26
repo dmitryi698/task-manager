@@ -1,5 +1,5 @@
 import { taskSchema, type Task } from "../schema";
-import { prisma } from "../../../lib";
+import { prisma } from "../../../server/lib";
 
 export async function createTask(taskData: Omit<Task, "id">) {
   const validatedData = taskSchema.parse(taskData);
