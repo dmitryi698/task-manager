@@ -6,7 +6,9 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@astrojs/svelte": "^7.1.0",
@@ -22,7 +24,11 @@
     "zod": "^3.25.23"
   },
   "devDependencies": {
+    "@testing-library/svelte": "^5.2.8",
     "@types/node": "^22.15.21",
-    "prisma": "^6.8.2"
+    "@vitest/coverage-v8": "^3.1.4",
+    "happy-dom": "^17.4.7",
+    "prisma": "^6.8.2",
+    "vitest": "^3.1.4"
   }
 }
