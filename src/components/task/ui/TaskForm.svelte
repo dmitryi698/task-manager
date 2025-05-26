@@ -1,21 +1,18 @@
 <script lang="ts">
-  import {taskSchema, type Task} from '../schema/index'
+  export let task = {
+    id: "",
+    title: "",
+    description: "",
+    priority: "medium",
+    dueDate: new Date().toISOString().split("T")[0],
+    completed: false,
+  };
 
-  import { superForm, type SuperValidated } from "sveltekit-superforms";
-  import { zodClient } from "sveltekit-superforms/adapters";
+  export let onClose: () => void;
+  export let onTaskCreated: () => void;
 
-  let { sv }: { sv: SuperValidated<Task> } = $props();
-
-  const sf = superForm(sv, {
-    validators: zodClient(taskSchema),
-    onUpdated: ({ form: { message } }) => {
-      if (message) console.log(message);
-    },
-  });
-  const { enhance, form } = sf;
-
-  let error = $state('');
-  let isLoading = $state(false);
+  let error = "";
+  let isLoading = false;
 
   async function handleSubmit(event: Event) {
     event.preventDefault();
@@ -26,8 +23,8 @@
     const formData = new FormData(form);
 
     try {
-      const url = form.id ? `/api/tasks/${form.id}.json` : "/api/tasks/index.json";
-      const method = form.id ? "PUT" : "POST";
+      const url = task.id ? `/api/tasks/${task.id}.json` : "/api/tasks/index.json";
+      const method = task.id ? "PUT" : "POST";
 
       const response = await fetch(url, {
         method,
@@ -59,7 +56,7 @@
 </script>
 
 <div class="border rounded p-4 bg-white mb-4">
-  <h3 class="font-bold text-lg mb-4">{task?.id ? "Edit Task" : "Add New Task"}</h3>
+  <h3 class="font-bold text-lg mb-4">{task.id ? "Edit Task" : "Add New Task"}</h3>
 
   {#if error}
     <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
@@ -67,7 +64,7 @@
     </div>
   {/if}
 
-  <form  method="POST" onsubmit={handleSubmit} use:enhance>
+  <form on:submit={handleSubmit}>
     <div class="mb-4">
       <label class="block text-gray-700 mb-2" for="title">
         Title
@@ -76,7 +73,7 @@
         id="title"
         name="title"
         type="text"
-        bind:value={$form.title}
+        value={task.title}
         class="w-full px-3 py-2 border rounded"
         required
       />
@@ -91,7 +88,7 @@
         name="description"
         class="w-full px-3 py-2 border rounded"
         required
-      >{$form.description}</textarea>
+      >{task.description}</textarea>
     </div>
 
     <div class="mb-4">
@@ -103,9 +100,9 @@
         name="priority"
         class="w-full px-3 py-2 border rounded"
       >
-        <option value="low" selected={$form.priority === "low"}>Low</option>
-        <option value="medium" selected={$form.priority === "medium"}>Medium</option>
-        <option value="high" selected={$form.priority === "high"}>High</option>
+        <option value="low" selected={task.priority === "low"}>Low</option>
+        <option value="medium" selected={task.priority === "medium"}>Medium</option>
+        <option value="high" selected={task.priority === "high"}>High</option>
       </select>
     </div>
 
@@ -117,18 +114,18 @@
         id="dueDate"
         name="dueDate"
         type="date"
-        value={$form.dueDate}
+        value={task.dueDate}
         class="w-full px-3 py-2 border rounded"
         required
       />
     </div>
-    {#if $form.id}
+    {#if task.id}
       <div class="mb-4">
         <label class="inline-flex items-center">
           <input
             type="checkbox"
             name="completed"
-            checked={$form.completed}
+            checked={task.completed}
             class="rounded text-blue-500"
           />
           <span class="ml-2">Completed</span>
@@ -139,7 +136,7 @@
     <div class="flex justify-end space-x-2">
       <button
         type="button"
-        onclick={onClose}
+        on:click={onClose}
         class="px-4 py-2 bg-gray-200 rounded"
         disabled={isLoading}
       >
@@ -150,7 +147,7 @@
         class="px-4 py-2 bg-blue-500 text-white rounded"
         disabled={isLoading}
       >
-        {isLoading ? 'Saving...' : ($form.id ? 'Update' : 'Create')}
+        {isLoading ? 'Saving...' : (task.id ? 'Update' : 'Create')}
       </button>
     </div>
   </form>

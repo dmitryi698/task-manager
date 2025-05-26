@@ -49,7 +49,7 @@
   </div>
 
   {#if showForm}
-    <TaskForm 
+    <TaskForm
       onClose={() => (showForm = false)}
       onTaskCreated={() => location.reload()}
     />
@@ -62,8 +62,8 @@
       if (filter === 'completed') return task.completed;
       return true;
     }) as task (task.id)}
-      <TaskItem 
-        {task} 
+      <TaskItem
+        {task}
         onTaskUpdated={() => location.reload()}
         onTaskDeleted={() => location.reload()}
       />
