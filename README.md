@@ -1,48 +1,99 @@
-# Astro Starter Kit: Basics
+# Task manager project
 
-```sh
-npm create astro@latest -- --template basics
-```
+This "Task Manager" project is developed using modern web technologies for efficient task management.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
+## 🚀 Technologies
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+The project is built upon:
 
-![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
+- **Astro**: A lightweight and fast web framework for building content-focused websites.
+- **Svelte**: A UI compiler that allows writing efficient component code.
+- **Prisma**: A modern ORM for Node.js and TypeScript, used for database interaction.
+- **Vitest**: A fast and opinionated test framework for unit testing.
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
+## 📁 Project Structure
 
 ```text
 /
-├── public/
-│   └── favicon.svg
+├── public/             # Static files
+├── prisma/             # Database schema and migrations
 ├── src/
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
-└── package.json
+│   ├── layouts/        # Astro page layouts
+│   ├── pages/          # Astro pages
+│   └── components/     # Svelte components (if any)
+│   └── server/         # Server utilities and lib
+└── package.json        # Dependencies list and scripts
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## ⚙️ Setup and Running
 
-## 🧞 Commands
+### Installing Dependencies
 
-All commands are run from the root of the project, from a terminal:
+In the root directory of the project, run the command:
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+```bash
+npm install
+```
 
-## 👀 Want to learn more?
+### Database Setup
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Ensure you have the database server specified in the `.env` file (if it exists) installed and running. Then apply the migrations:
+
+```bash
+npx prisma migrate dev
+```
+
+Generate the Prisma client:
+
+```bash
+npx prisma generate
+```
+
+### Running the Project
+
+To start the local development server, run:
+
+```bash
+npm run dev
+```
+
+The project will be available at `localhost:4321`.
+
+### Building the Project
+
+To build the project for production, run:
+
+```bash
+npm run build
+```
+
+The build result will be in the `./dist/` folder.
+
+### Previewing the Build
+
+To preview the built project locally:
+
+```bash
+npm run preview
+```
+
+## ✅ Testing
+
+To run tests:
+
+```bash
+npm test
+```
+
+To run tests with code coverage report:
+
+```bash
+npm run coverage
+```
+
+## 👀 Additional Information
+
+- [Astro Documentation](https://docs.astro.build/)
+- [Svelte Documentation](https://svelte.dev/docs)
+- [Prisma Documentation](https://www.prisma.io/docs)
+- [Vitest Documentation](https://vitest.dev/guide/)
