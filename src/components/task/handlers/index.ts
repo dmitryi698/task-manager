@@ -51,4 +51,41 @@ const deleteHandler = async (task: Task) => {
   }
 };
 
-export { submitHandler, compleatHandler, deleteHandler };
+const chatHandler = async (title: string) => {
+  const response = await fetch("/api/chat/index.json", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: import.meta.env.PUBLIC_CHAT_MODEL,
+      messages: [
+        {
+          role: "system",
+          content: "You are an assistant that helps write task descriptions.",
+        },
+        {
+          role: "user",
+          content: `Generate a task description for the following title: "${title}"`,
+        },
+      ],
+    }),
+  });
+
+  if (!response.ok || !response.body) {
+    throw new Error("Failed to connect to AI service.");
+  }
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let result = "";
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    result += decoder.decode(value, { stream: true });
+  }
+  console.log(result);
+
+  return result;
+};
+
+export { submitHandler, compleatHandler, deleteHandler, chatHandler };

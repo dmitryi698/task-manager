@@ -1,24 +1,46 @@
 <script lang="ts">
   import FormField from "../../ui/FormField.svelte";
   import Button from "../../ui/Button.svelte";
-
   import { options } from "../data/constants";
-  import { submitHandler } from "../handlers";
+  import { chatHandler, submitHandler } from "../handlers";
 
-  export let task = {
-    id: "",
-    title: "",
-    description: "",
-    priority: "medium",
-    dueDate: new Date().toISOString().split("T")[0],
-    completed: false,
-  };
+  let {
+    task = {
+      id: "",
+      title: "",
+      description: "",
+      priority: "medium",
+      dueDate: new Date().toISOString().split("T")[0],
+      completed: false,
+    },
+    onClose,
+    onTaskCreated,
+  } = $props();
 
-  export let onClose: () => void;
-  export let onTaskCreated: () => void;
+  let error = $state("");
+  let isLoading = $state(false);
+  let isAiProcessing = $state(false);
+  let title = $state(task.title);
+  let description = $state(task.description);
 
-  let error = "";
-  let isLoading = false;
+  async function getAiHelp() {
+    if (!title.trim()) {
+      description = "Please enter a title first";
+      return;
+    }
+
+    isAiProcessing = true;
+    description = "";
+
+    try {
+      const result = await chatHandler(title);
+      description = result;
+    } catch (err) {
+      description = `Error: ${err.message}`;
+    } finally {
+      isAiProcessing = false;
+    }
+  }
 
   async function handleSubmit(event: Event) {
     event.preventDefault();
@@ -59,23 +81,35 @@
     </div>
   {/if}
 
-  <form on:submit={handleSubmit}>
+  <form onsubmit={handleSubmit}>
     <FormField
       id="title"
       name="title"
       type="text"
       label="Title"
-      value={task.title}
+      bind:value={title}
       required
     />
-    <FormField
-      id="description"
-      name="description"
-      type="textarea"
-      label="Description"
-      value={task.description}
-      required
-    />
+    <div class="mb-4">
+      <div class="flex justify-between items-center mb-2">
+        <Button
+          type="button"
+          onclick={getAiHelp}
+          class="text-sm px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+          disabled={isLoading || isAiProcessing}
+          text={isAiProcessing ? "Generating..." : "Help with AI"}
+        />
+      </div>
+      <FormField
+        id="description"
+        name="description"
+        type="textarea"
+        label="Description"
+        bind:value={description}
+        required
+      />
+    </div>
+
     <FormField
       id="priority"
       name="priority"
@@ -98,7 +132,7 @@
         name="completed"
         type="checkbox"
         label="Completed"
-        value={task.completed}
+        checked={task.completed}
         required
       />
     {/if}

@@ -5,12 +5,9 @@
 
   import { compleatHandler, deleteHandler } from "../handlers";
 
-  export let task;
-  export let onTaskUpdated: () => void;
-  export let onTaskDeleted: () => void;
-
-  let editing = false;
-  let isLoading = false;
+  let { task = $bindable(), onTaskUpdated, onTaskDeleted } = $props();
+  let editing = $state(false);
+  let isLoading = $state(false);
 
   async function toggleComplete() {
     isLoading = true;

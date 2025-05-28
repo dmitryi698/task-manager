@@ -3,17 +3,21 @@
   import TaskItem from "./TaskItem.svelte";
   import TaskForm from "./TaskForm.svelte";
 
-  export let tasks: Array<{
-    id: string;
-    title: string;
-    description: string;
-    priority: string;
-    dueDate: Date;
-    completed: boolean;
-  }> = [];
+  let {
+    tasks,
+  }: {
+    tasks: Array<{
+      id: string;
+      title: string;
+      description: string;
+      priority: string;
+      dueDate: Date;
+      completed: boolean;
+    }>;
+  } = $props();
 
-  let filter = "all";
-  let showForm = false;
+  let filter = $state("all");
+  let showForm = $state(false);
 </script>
 
 <div class="max-w-2xl mx-auto p-4">

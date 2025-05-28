@@ -1,11 +1,14 @@
 <script lang="ts">
   interface FormFieldProps {
-    label: string;
+    label?: string;
     id?: string;
-    name: string;
+    name?: string;
     type: "text" | "textarea" | "date" | "select" | "checkbox";
-    value: any;
+    value?: any;
     error?: string;
+    class?: string;
+    disabled?: boolean;
+    checked?: boolean;
     required?: boolean;
     options?: { value: string; label: string }[];
     onChange?: (event: Event) => void;
@@ -16,8 +19,11 @@
     id,
     name,
     type,
-    value,
+    value = $bindable(),
     error,
+    class: className,
+    disabled,
+    checked = $bindable(),
     required = false,
     options = [], // Убедимся, что это всегда массив по умолчанию
     onChange,
@@ -37,20 +43,26 @@
       id={name}
       {name}
       {type}
-      {value}
-      class="w-full px-3 py-2 border rounded {error ? 'border-red-500' : ''}"
-      onchange={onChange}
+      bind:value
+      {disabled}
       {required}
+      onchange={onChange}
+      class={className
+        ? className
+        : `w-full px-3 py-2 border rounded ${error ? "border-red-500" : ""}`}
       {...props}
     />
   {:else if type === "textarea"}
     <textarea
       id={name}
       {name}
-      {value}
-      onchange={onChange}
-      class="w-full px-3 py-2 border rounded {error ? 'border-red-500' : ''}"
+      bind:value
+      {disabled}
       {required}
+      onchange={onChange}
+      class={className
+        ? className
+        : `w-full px-3 py-2 border rounded ${error ? "border-red-500" : ""}`}
       {...props}
     ></textarea>
   {:else if type === "date"}
@@ -58,20 +70,26 @@
       id={name}
       {name}
       type="date"
-      onchange={onChange}
-      {value}
-      class="w-full px-3 py-2 border rounded {error ? 'border-red-500' : ''}"
+      bind:value
+      {disabled}
       {required}
+      onchange={onChange}
+      class={className
+        ? className
+        : `w-full px-3 py-2 border rounded ${error ? "border-red-500" : ""}`}
       {...props}
     />
   {:else if type === "select"}
     <select
       id={name}
       {name}
-      {value}
-      onchange={onChange}
-      class="w-full px-3 py-2 border rounded {error ? 'border-red-500' : ''}"
+      bind:value
+      {disabled}
       {required}
+      onchange={onChange}
+      class={className
+        ? className
+        : `w-full px-3 py-2 border rounded ${error ? "border-red-500" : ""}`}
       {...props}
     >
       {#each options as option}
@@ -84,13 +102,14 @@
         id={name}
         {name}
         type="checkbox"
-        onchange={onChange}
-        {value}
-        class="rounded text-blue-500"
+        bind:checked
+        {disabled}
         {required}
+        onchange={onChange}
+        class={`checkbox-input ${className ? className : "rounded text-blue-500"}`}
         {...props}
       />
-      <span class="ml-2">{label}</span>
+      <span class="checkbox-label-text ml-2">{label}</span>
     </label>
   {/if}
 
@@ -98,3 +117,10 @@
     <div class="text-red-500 text-sm mt-1">{error}</div>
   {/if}
 </div>
+
+<style>
+  .checkbox-input,
+  .checkbox-label-text {
+    cursor: pointer;
+  }
+</style>
