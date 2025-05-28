@@ -37,17 +37,23 @@ npm install
 
 ### Database Setup
 
+This project uses SQLite as its database. The database file path is typically configured in the `.env` file.
+
 Ensure you have the database server specified in the `.env` file (if it exists) installed and running. Then apply the migrations:
 
 ```bash
 npx prisma migrate dev
 ```
 
+This command will create the database file (if it doesn't exist) and apply any pending migrations based on your `prisma/schema.prisma`.
+
 Generate the Prisma client:
 
 ```bash
 npx prisma generate
 ```
+
+This command generates the Prisma client based on your database schema, allowing you to interact with the database in your code.
 
 ### Running the Project
 
