@@ -82,7 +82,7 @@ npm run preview
 To run tests:
 
 ```bash
-npm test
+npm run test
 ```
 
 To run tests with code coverage report:
